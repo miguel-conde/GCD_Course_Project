@@ -37,11 +37,13 @@ procRawDataSet <- function (set) {
     })
     
     # Get data for all features, cleaning "()" and "-" from col names
-    names(rawDataSet) <- gsub("\\(\\)","", features$V2)
-    names(rawDataSet) <- gsub("\\-","_", names(rawDataSet))
+    names(rawDataSet) <- gsub("\\(\\)" ,"", features$V2)
+    names(rawDataSet) <- gsub("\\-", "_", names(rawDataSet))
     
     # Attach just mean and std columns and return dataset obtained
-    col_mn_std <- grep("mean|std", names(rawDataSet))
+    reg_expr <- "mean|std"
+    #reg_expr <- "^t(BodyAcc|GravityAcc|BodyGyro)_(mean|std)_[XYZ]+"
+    col_mn_std <- grep(reg_expr, names(rawDataSet))
     cbind(my_dataset, rawDataSet[, col_mn_std])
 }
 
@@ -63,6 +65,5 @@ tidy_DataSet<-as.data.frame(summarise_each(tbl_my_dDataSet_group_by,
 # Write it as a txt file created with write.table() using row.name=FALSE
 write.table(tidy_DataSet, "tidy_DataSet.txt", row.names=FALSE )
 
-prueba <- read.table("tidy_DataSet.txt", header=TRUE)
 
 
