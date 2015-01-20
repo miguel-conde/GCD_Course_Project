@@ -16,12 +16,6 @@ The steps to do this will be:
 6. Document all the process in this document.
 
 
-Exploraacion de los ficheros
-    Por que 561, etc - Explorando los ficheros con R
-2 - Por qué estos ficheros
-3 - Por qué estas variables
-	Alternativas - Expr regular
-	Por qué salen 81 - Exploración con la expr. regular y tabla de lo de arriba
 
 
 # Understanding the instructions - Key points
@@ -56,7 +50,7 @@ The aim is create one R script called run_analysis.R that does the following.
 
 ## Downloading data and exploring them to understand structure and meaning.
 
-I downloade the [file][3] to my working directory and uncompressed it. I found it created a directory, UCI HAR Dataset/, in my working directory, with this structure:
+I downloaded the [file][3] to my working directory and uncompressed it. I found it created a directory, UCI HAR Dataset/, in my working directory, with this structure:
 
 ```{r}
 dir("UCI HAR Dataset", full.names=T, recursive = T)
@@ -99,22 +93,22 @@ Also, the following files are available for the train and test data. Their descr
 - 'train/Inertial Signals/body_acc_x_train.txt': The body acceleration signal obtained by subtracting the gravity from the total acceleration. 
 - 'train/Inertial Signals/body_gyro_x_train.txt': The angular velocity vector measured by the gyroscope for each window sample. The units are radians/second.
 
-As a first conclusion, I infer we can ignore Inertial Signals in train and test data sets and concentrate in X_train.txt and X_test.text
+As a first conclusion, I infer **we can ignore Inertial Signals in train and test data sets and concentrate in "X_train.txt"" and "X_test.text"**
 
 From README.txt we learn this info about what's contained in UCI HAR Dataset/:
 
-```
-**UCI HAR Dataset/**
-- *README.txt*: this file
-- *Activity_labels.txt*: Links the class labels with their activity name 
-- *features.txt*: List of all features. A 561-feature vector with time and frequency domain variables. *Why 561?*
-- *features_info.txt*: Shows information about the variables used on the feature vector.
-- **test/**
-    + *subject_test.txt*: Each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30. *30 subjects?*
-    + *X_test.txt*: **Training set**. 
-    + *y_test.txt*: (range from 1 to 6). *Why this range?*
-    + **Inertial Signals/**
-        + *body_acc_x_test.txt*: The body acceleration signal obtained by subtracting the gravity from the total acceleration. Every row shows a 128 element vector. 
+**UCI HAR Dataset/**  
+
+- *README.txt*: this file  
+- *Activity_labels.txt*: Links the class labels with their activity name   
+- *features.txt*: List of all features. A 561-feature vector with time and frequency domain variables. *Why 561?*  
+- *features_info.txt*: Shows information about the variables used on the feature vector.  
+- **test/**  
+    + *subject_test.txt*: Each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30. *30 subjects?*  
+    + *X_test.txt*: **Training set**.   
+    + *y_test.txt*: (range from 1 to 6). *Why this range?*  
+    + **Inertial Signals/**  
+        + *body_acc_x_test.txt*: The body acceleration signal obtained by subtracting the gravity from the total acceleration. Every row shows a 128 element vector.   
         + *body_acc_y_test.txt* 
         + *body_acc_z_test.txt* 
         + *body_gyro_x_test.txt*: The angular velocity vector measured by the gyroscope for each window sample. The units are radians/second. Every row shows a 128 element vector. 
@@ -137,7 +131,7 @@ From README.txt we learn this info about what's contained in UCI HAR Dataset/:
         + *total_acc_x_train.txt*: 7352 acceleration signal from the smartphone accelerometer X axis in standard gravity units 'g'. 
         + *total_acc_y_train.txt*: 
         + *total_acc_z_train.txt*: 
-```
+
 
 ### Exploring Data
 
@@ -152,7 +146,7 @@ head(probe)
 So it seems we have here how activity # ids are linked to activity names.
 
 Now "features.txt":
-```
+```{r}
 probe <- read.table("./UCI HAR Dataset/features.txt")
 dim(probe)
 str(probe)
@@ -199,7 +193,7 @@ fBodyGyroJerkMag
 
 The set of variables that were estimated from these signals are: 
 
-17 (33 x 17 = 561):
+17:
 
 mean(): Mean value
 std(): Standard deviation
@@ -238,7 +232,7 @@ tail(probe)
 unique(probe)
 nrow(unique(probe))
 ```
-We have `{r} nrow(unique(probe))` rows, each with numbers just in `{r}unique(probe). We know from README.txt that each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30. This appears the 30% subjects used for the test set. Lets check with the train one:
+We have `r nrow(unique(probe))` rows, each with numbers just in `ras.character(unique(probe$V1))`. We know from README.txt that each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30. This appears the 30% subjects used for the test set. Lets check with the train one:
 
 ```{r}
 probe <- read.table("./UCI HAR Dataset/train/subject_train.txt")
@@ -250,7 +244,7 @@ unique(probe)
 nrow(unique(probe))
 
 ```
-there are `{r} nrow(unique(probe))` subjects here, the 70% required for the train set. And they are diferent from the subjects in the test set:
+there are `r nrow(unique(probe))` subjects here, the 70% required for the train set. And they are diferent from the subjects in the test set:
 
 ```{r}
 probe_test <- read.table("./UCI HAR Dataset/test/subject_test.txt")
@@ -263,13 +257,13 @@ That's OK!
 
 Let's explore "X_test.txt" now:
 
-```{r}
+```{r main_data, CACHE=TRUE}
 probe <- read.table("./UCI HAR Dataset/test/X_test.txt")
 dim(probe)
 str(probe)
 ```
 
-We have `{r} dim(probe)[1]` rows and `{r} dim(probe)[2]` columns (the festures).
+We have `r dim(probe)[1]` rows and `r dim(probe)[2]` columns (the features).
 
 Last but not least, "y_test.txt":
 ```{r}
@@ -284,21 +278,44 @@ nrow(unique(probe))
 
 So they must be the activity # ids.
 
-** Summing up:**  
+**Summing up:**  
 
 - We have a main **Training set**, "./UCI HAR Dataset/Train/X_train.txt", with 2497 obs of 561 variables (the features).
 - "./UCI HAR Dataset/activity_labels.txt" (6 obs. of 2 variables) links the class labels with their activity name ( 1-WALKING, 2-WALKING_UPSTAIRS, 3-WALKING_DOWNSTAIRS, 4-SITTING, 5-STANDING, 6-LAYING )
 - ./UCI HAR Dataset/features.txt: Test set column names. List of all features (described in 'features_info.txt'). 561 obs. of 2 variables.
-- ./UCI HAR Dataset/test/X_test.txt 2947 obs. of 561 variables.
 - "./UCI HAR Dataset/test/y_test.txt": Activity kind column for dataset. 2947 obs. of 1 variable.
-- "./UCI HAR Dataset/test/y_test.txt". subject columns for dataset. 2947 obs. of 1 variable.
+- "./UCI HAR Dataset/test/subject_test.txt". subject columns for dataset. 2947 obs. of 1 variable.
 
+### Choosing variables
+
+In "./UCI HAR Dataset/Train/X_train.txt" we have 561 features. We are required to *extract only the measurements on the mean and standard deviation for each measurement*.
+
+Let's take a look of the features including "mean" or "std" in its name:
+
+```{r}
+probe <- read.table("./UCI HAR Dataset/features.txt") 
+grep("mean|std", probe$V2, value=TRUE)
+```
+
+As we can see, we have "()" and "-" in the features names. We'll have to take care of this when writing the script.
+
+We'll use this broad definition of *measurements on the mean and standard deviation for each measurement*, althoug others are possible. For instance, if we recall what are real, non processed measurements, we should use jus this ones:
+
+```{r}
+grep("^t(BodyAcc|GravityAcc|BodyGyro)-(mean|std)\\(\\)-[XYZ]+", 
+     probe$V2, value=TRUE)
+```
+
+So our *objetive* is to get a tidy dataset with:
+
+- columns:`r length(grep("mean|std", probe$V2, value=TRUE))` features + 2 (Activity, Subject) = `r 2 + length(grep("mean|std", probe$V2, value=TRUE))`
+- rows: 30 (Subjects) x 6 (activities) = 180.
 
 ## How the script works
 
 ### Relevant files
 
-Taking into account the above definition of files included in **dataset**, these are the test files to consider:
+Taking into account the above, these are the test files to consider:
 
 - Test set column names: ./UCI HAR Dataset/features.txt (561 obs. of 2 variables)
 - Activity labels: ./UCI HAR Dataset/activity_labels.txt (6 obs. of 2 variable)
@@ -414,53 +431,35 @@ checkData <- read.table("tidy_DataSet.txt", header = TRUE)
 
 ```
      [1] "Activity"                      
-     [2] "Subject"                      
-   [3-5] "tBodyAcc_mean_XYZ"    
-   [6-8] "tBodyAcc_std_XYZ"                   
-  [9-11] "tGravityAcc_mean_XYZ"              
- [12-14] "tGravityAcc_std_XYZ"                
- [15-17] "tBodyAccJerk_mean_XYZ"         
- [18-20] "tBodyAccJerk_std_XYZ"           
- [21-23] "tBodyGyro_mean_XYZ"               
- [24-26] "tBodyGyro_std_XYZ"                  
- [27-29] "tBodyGyroJerk_mean_XYZ"        
- [30-32] "tBodyGyroJerk_std_XYZ"          
-    [33] "tBodyAccMag_mean"              
-    [34] "tBodyAccMag_std"              
-    [35] "tGravityAccMag_mean"           
-    [36] "tGravityAccMag_std"           
-    [37] "tBodyAccJerkMag_mean"          
-    [38] "tBodyAccJerkMag_std"          
-    [39] "tBodyGyroMag_mean"             
-    [40] "tBodyGyroMag_std"             
-    [41] "tBodyGyroJerkMag_mean"         
-    [42] "tBodyGyroJerkMag_std"         
- [43-45] "fBodyAcc_mean_XYZ"                           
- [46-48] "fBodyAcc_std_XYZ"                              
- [49-51] "fBodyAcc_meanFreq_XYZ"           
- [52-54] "fBodyAccJerk_mean_XYZ"         
- [55-57] "fBodyAccJerk_std_XYZ"            
- [58-60] "fBodyAccJerk_meanFreq_XYZ"     
- [61-63] "fBodyGyro_mean_XYZ              
- [64-66] "fBodyGyro_std_XYZ"            
- [67-69] "fBodyGyro_meanFreq_XYZ"          
-    [70] "fBodyAccMag_mean"              
-    [71] "fBodyAccMag_std"               
-    [72] "fBodyAccMag_meanFreq"         
-    [73] "fBodyBodyAccJerkMag_mean"      
-    [74] "fBodyBodyAccJerkMag_std"      
-    [75] "fBodyBodyAccJerkMag_meanFreq"  
-    [76] "fBodyBodyGyroMag_mean"        
-    [77] "fBodyBodyGyroMag_std"          
-    [78] "fBodyBodyGyroMag_meanFreq"    
-    [79] "fBodyBodyGyroJerkMag_mean"     
-    [80] "fBodyBodyGyroJerkMag_std"     
-    [81] "fBodyBodyGyroJerkMag_meanFreq"
+     [2] "Subject"           
+2
+   [3-5] "tBodyAcc_mean_XYZ"        [6-8] "tBodyAcc_std_XYZ"
+  [9-11] "tGravityAcc_mean_XYZ"     [12-14] "tGravityAcc_std_XYZ"       
+ [15-17] "tBodyAccJerk_mean_XYZ"    [18-20] "tBodyAccJerk_std_XYZ"     
+ [21-23] "tBodyGyro_mean_XYZ"       [24-26] "tBodyGyro_std_XYZ"             
+ [27-29] "tBodyGyroJerk_mean_XYZ"   [30-32] "tBodyGyroJerk_std_XYZ"  
+5 x 2 x 3 = 30 
+    [33] "tBodyAccMag_mean"         [34] "tBodyAccMag_std"    
+    [35] "tGravityAccMag_mean"      [36] "tGravityAccMag_std"    
+    [37] "tBodyAccJerkMag_mean"     [38] "tBodyAccJerkMag_std"    
+    [39] "tBodyGyroMag_mean"        [40] "tBodyGyroMag_std"    
+    [41] "tBodyGyroJerkMag_mean"    [42] "tBodyGyroJerkMag_std"    
+5 x 2 x 1 = 10    
+ [43-45] "fBodyAcc_mean_XYZ"        [46-48] "fBodyAcc_std_XYZ"        [49-51] "fBodyAcc_meanFreq_XYZ"                
+ [52-54] "fBodyAccJerk_mean_XYZ"    [55-57] "fBodyAccJerk_std_XYZ"    [58-60] "fBodyAccJerk_meanFreq_XYZ"    
+ [61-63] "fBodyGyro_mean_XYZ        [64-66] "fBodyGyro_std_XYZ"       [67-69] "fBodyGyro_meanFreq_XYZ"
+3 x 3 x 3 = 27  
+ [70] "fBodyAccMag_mean"             [71] "fBodyAccMag_std"           [72] "fBodyAccMag_meanFreq"   
+ [73] "fBodyBodyAccJerkMag_mean"     [74] "fBodyBodyAccJerkMag_std"   [75] "fBodyBodyAccJerkMag_meanFreq"
+ [76] "fBodyBodyGyroMag_mean"        [77] "fBodyBodyGyroMag_std"      [78] "fBodyBodyGyroMag_meanFreq"
+ [79] "fBodyBodyGyroJerkMag_mean"    [80] "fBodyBodyGyroJerkMag_std"  [81] "fBodyBodyGyroJerkMag_meanFreq"
+4 x 3 x 1 = 12   
+
+2 + 30 + 10 + 27 + 12 = 81
 ```
  
  
-Features Explanation 
-====================
+### Features Explanation 
 
 ```
 "Activity": class labels with their activity name (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING )
