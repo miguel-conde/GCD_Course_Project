@@ -69,13 +69,13 @@ Also, the following files are available for the train and test data. Their descr
 **UCI HAR Dataset/**
 
 - *README.txt*: this file
-- *Activity_labels.txt*: Links the class labels with their activity name. 6 obs of 2 variables.
-- *features.txt*: List of all features. A 561-feature vector with time and frequency domain variables. 561 obs of 2 variables.
+- *Activity_labels.txt*: Links the class labels with their activity name ( 1-WALKING, 2-WALKING_UPSTAIRS, 3-WALKING_DOWNSTAIRS, 4-SITTING, 5-STANDING, 6-LAYING ). 6 obs of 2 variables. 6 obs of 2 variables.
+- *features.txt*: List of all features (described in 'features_info.txt'). A 561-feature vector with time and frequency domain variables. 561 obs of 2 variables.
 - *features_info.txt*: Shows information about the variables used on the feature vector.
 - **test/**
     + *subject_test.txt*: Each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30. 2497 obs of 1 variables.
     + *X_test.txt*: **Training set**. 2497 obs of 561 variables
-    + *y_test.txt*: Test activity ids. 2497 obs of 1 variables.
+    + *y_test.txt*: (range from 1 to 6). 2497 obs of 1 variables.
     + **Inertial Signals/**
         + *body_acc_x_test.txt*: The body acceleration signal obtained by subtracting the gravity from the total acceleration. Every row shows a 128 element vector. 2497 obs of 128 variables.
         + *body_acc_y_test.txt* 2497 obs of 128 variables.
@@ -89,7 +89,7 @@ Also, the following files are available for the train and test data. Their descr
 - **train/**
     + *subject_train.txt*: Each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30. 7352 obs of 1 variables.
     + *X_train.txt*: **Training set**. 7352 obs of 561 variables
-    + *y_train.txt*: Test activity ids. 7352 obs of 1 variables.
+    + *y_train.txt*: (range from 1 to 6). 7352 obs of 1 variables.
     + **Inertial Signals/**
         + *body_acc_x_train.txt*: The body acceleration signal obtained by subtracting the gravity from the total acceleration. Every row shows a 128 element vector. 7352 obs of 128 variables.
         + *body_acc_y_train.txt* 7352 obs of 128 variables.
@@ -209,6 +209,14 @@ Finally, point 6:
 write.table(tidy_DataSet, "tidy_DataSet.txt", row.names=FALSE )
 ```
 
+If you wanna check this file, just run:
+
+```
+checkData <- read.table("tidy_DataSet.txt", header = TRUE)
+```
+
+(your working directory must be the same as where you donloaded the file "tidy_DataSet.txt" )
+
 ## Code book
 
 ```
@@ -236,30 +244,36 @@ write.table(tidy_DataSet, "tidy_DataSet.txt", row.names=FALSE )
     [42] "tBodyGyroJerkMag_std"         
  [43-45] "fBodyAcc_mean_XYZ"                           
  [46-48] "fBodyAcc_std_XYZ"                              
-  49-51] "fBodyAcc_meanFreq_XYZ"           
+ [49-51] "fBodyAcc_meanFreq_XYZ"           
  [52-54] "fBodyAccJerk_mean_XYZ"         
  [55-57] "fBodyAccJerk_std_XYZ"            
  [58-60] "fBodyAccJerk_meanFreq_XYZ"     
  [61-63] "fBodyGyro_mean_XYZ              
  [64-66] "fBodyGyro_std_XYZ"            
  [67-69] "fBodyGyro_meanFreq_XYZ"          
- [70] "fBodyAccMag_mean"             
- [71] "fBodyAccMag_std"               
- [72] "fBodyAccMag_meanFreq"         
- [73] "fBodyBodyAccJerkMag_mean"      
- [74] "fBodyBodyAccJerkMag_std"      
- [75] "fBodyBodyAccJerkMag_meanFreq"  
- [76] "fBodyBodyGyroMag_mean"        
- [77] "fBodyBodyGyroMag_std"          
- [78] "fBodyBodyGyroMag_meanFreq"    
- [79] "fBodyBodyGyroJerkMag_mean"     
- [80] "fBodyBodyGyroJerkMag_std"     
- [81] "fBodyBodyGyroJerkMag_meanFreq"
+    [70] "fBodyAccMag_mean"              
+    [71] "fBodyAccMag_std"               
+    [72] "fBodyAccMag_meanFreq"         
+    [73] "fBodyBodyAccJerkMag_mean"      
+    [74] "fBodyBodyAccJerkMag_std"      
+    [75] "fBodyBodyAccJerkMag_meanFreq"  
+    [76] "fBodyBodyGyroMag_mean"        
+    [77] "fBodyBodyGyroMag_std"          
+    [78] "fBodyBodyGyroMag_meanFreq"    
+    [79] "fBodyBodyGyroJerkMag_mean"     
+    [80] "fBodyBodyGyroJerkMag_std"     
+    [81] "fBodyBodyGyroJerkMag_meanFreq"
 ```
  
  
 Features Explanation 
 ====================
+
+```
+"Activity": class labels with their activity name (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING )
+
+"Subject": the # id of the subject who performed the activity. Its range is from 1 to 30.
+```
 
 The acceleration signals from the smartphone accelerometer (BodyAcc, GravityAcc) are in standard gravity units 'g'.  
 The angular velocity signals measured by the gyroscope (BodyGyro) are in radians/second. 

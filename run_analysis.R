@@ -65,5 +65,5 @@ tidy_DataSet<-as.data.frame(summarise_each(tbl_my_dDataSet_group_by,
 # Write it as a txt file created with write.table() using row.name=FALSE
 write.table(tidy_DataSet, "tidy_DataSet.txt", row.names=FALSE )
 
-
+checkData <- read.table("tidy_DataSet.txt", header = TRUE)
 
